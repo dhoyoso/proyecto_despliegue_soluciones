@@ -11,15 +11,15 @@ El desafío principal que se aborda en este proyecto está relacionado con la in
 
 **Alcance del Proyecto:**
 
-•	Recopilación, limpieza y transformación de datos de vuelos comerciales y registros climatológicos del periodo de interés (abril a octubre de 2013).
-•	Integración de los conjuntos de datos.
-•	Exploración de los conjuntos de datos.
-•	Selección y entrenamiento de modelos para la predicción de retrasos.
-•	Creación de tablero de visualización de datos históricos.
-•	Integración del tablero con una interfaz de captura de datos para realizar predicciones de retrasos.
-•	Despliegue y operación de la solución (incluye tablero e interfaz de interacción con el modelo predictivo). 
-•	Todo lo anterior, realizado bajo las mejores prácticas de MLOPS para el versionamiento de modelos, código, experimentos y su reproducibilidad.
-•	El objetivo final del proyecto es proporcionar información útil para la toma de decisiones operativas y estratégicas en aerolíneas y aeropuertos.
+-	Recopilación, limpieza y transformación de datos de vuelos comerciales y registros climatológicos del periodo de interés (abril a octubre de 2013).
+-	Integración de los conjuntos de datos.
+-	Exploración de los conjuntos de datos.
+-	Selección y entrenamiento de modelos para la predicción de retrasos.
+-	Creación de tablero de visualización de datos históricos.
+-	Integración del tablero con una interfaz de captura de datos para realizar predicciones de retrasos.
+-	Despliegue y operación de la solución (incluye tablero e interfaz de interacción con el modelo predictivo). 
+-	Todo lo anterior, realizado bajo las mejores prácticas de MLOPS para el versionamiento de modelos, código, experimentos y su reproducibilidad.
+-	El objetivo final del proyecto es proporcionar información útil para la toma de decisiones operativas y estratégicas en aerolíneas y aeropuertos.
 
 
 ## Descripción de los datos utilizados en este proyecto
