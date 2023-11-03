@@ -39,6 +39,7 @@ La información se descarga directamente de la página del Buró https://www.bts
  ┣ 📄 Exploración_base_vuelos.ipynb --> Notebook con la preprocesamiento y exploración de la base de vuelos.
  ┣ 📄 Exploración_base_clima.ipynb --> Notebook con la preprocesamiento y exploración de la base de clima.
  ┣ 📄 Integración_base_final.ipynb --> Notebook con la integración de las bases de clima y vuelos.
+ ┣ 📄 mlflow-flight-delay.py --> Script de python para registrar los experimentos de entrenamiento y evaluación en mlflow.
  ┣ 📄 README.md --> Documento de orientación y explicación del proyecto y sus archivos.
  ┣ 📄 .dvcignore --> Define archivos a ignorar por el sistema de control de versiones en relación con los datos.
  ┣ 📂 .dvc --> Carpeta con la configuración de DVC.
