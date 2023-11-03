@@ -48,6 +48,9 @@ La información se descarga directamente de la página del Buró https://www.bts
    ┣ 📄 Flight Delays Data.csv.dvc --> Archivo con los metadatos de DVC del conjunto de datos de vuelos.
    ┗ 📄 .gitignore --> Archivo para ignorar archivos de datos (pues estos los maneja DVC).
  ```
+# MLFlow
+Se realiza corrida de modelos para validar desempeño de posibles modelos a implementar en tablero final, modificando diferentes hiperparámetros
+![Alt text](./Images/MLFlow1.png)
 
 ## Integrantes del equipo
 * Claudia Marcela Baquero Rico
