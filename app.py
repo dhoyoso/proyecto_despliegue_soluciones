@@ -32,11 +32,11 @@ def description_card():
     return html.Div(
         id="description-card",
         children=[
-            html.H5("Proyecto DSA Grupo 5"),
+            #html.H5("Proyecto DSA Grupo 5"),
             html.H3("Predicción de retrasos en vuelos"),
             html.Div(
                 id="intro",
-                children="Esta interfaz proporciona a los operadores de aeropuertos una herramienta integral para prever y gestionar retrasos en vuelos. Los usuarios pueden ingresar información de las torres de control como datos de vuelos y condiciones climáticas para obtener predicciones precisas de posibles retrasos. Las visualizaciones del comportamiento histórico ayudan a equilibrar la distribución de pistas de embarque y optimizar la toma de decisiones operativas."
+                children="Esta interfaz proporciona a los operadores de aeropuertos una herramienta integral para prever y gestionar retrasos en vuelos. Los usuarios pueden ingresar información de las torres de control como datos de vuelos y condiciones climáticas para obtener predicciones precisas de posibles retrasos. Las visualizaciones del comportamiento histórico ayudan a equilibrar la distribución de pistas de embarque y optimizar la toma de decisiones operativas. Los datos históricos se obtienen del Buró de Estadísticas de Transporte del Departamento de Transporte de los Estados Unidos (DOT) quien realiza un seguimiento puntual de los vuelos nacionales operados por grandes transportistas aéreos."
             ),
         ],
     )
@@ -71,7 +71,7 @@ def generate_control_card():
             html.Div(
                 id="componentes-fecha-inicial",
                 children=[
-                    html.P("Fecha:", style=dict(width='10%', textAlign='center', margin='2%')),
+                    html.P("Fecha:", style=dict(width='10%', textAlign='center', margin='1%')),
                     html.Div(
                         id="componente-fecha",
                         children=[
@@ -83,7 +83,7 @@ def generate_control_card():
                                 date=dt.datetime.now()
                             )
                         ],
-                        style=dict(width='95%', display='inline-block', margin='2%')
+                        style=dict(width='95%', display='inline-block', margin='1%')
                     )
                 ],
                 style=dict(display='flex', width='95%')
@@ -101,7 +101,7 @@ def generate_control_card():
                         value='all',  # Valor predeterminado: "todos"
                         style={'width': '100%'}
                     ),
-                ], className="four columns", style={'width': '95%', 'margin':'2%'}
+                ], className="four columns", style={'width': '95%', 'margin':'1%'}
             ),
             html.Div([
                     html.Label('Selecciona un aeropuerto destino:'),
@@ -116,7 +116,7 @@ def generate_control_card():
                         value='all',  # Valor predeterminado: "todos"
                         style={'width': '100%'}
                     ),
-                ], className="four columns", style={'width': '95%', 'margin':'2%'}
+                ], className="four columns", style={'width': '95%', 'margin':'1%'}
             ),
             html.Div([
                     html.Label('Selecciona una aerolínea:'),
@@ -131,12 +131,12 @@ def generate_control_card():
                         value='all',  # Valor predeterminado: "todos"
                         style={'width': '100%'}
                     ),
-                ], className="four columns", style={'width': '95%', 'margin':'2%'}
+                ], className="four columns", style={'width': '95%', 'margin':'1%'}
             ),
             html.Div(
                 id="componente-slider",
                 children=[
-                    html.P("Velocidad del Viento (m/s):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    html.P("Velocidad del Viento (m/s):", style=dict(width='100%', textAlign='left', margin='1%')),
                     dcc.Slider(
                         id='slider-viento',
                         min=0,
@@ -150,12 +150,12 @@ def generate_control_card():
                         }
                     )
                 ],
-                style=dict(width='95%', display='inline-block', margin='2%')
+                style=dict(width='95%', display='inline-block', margin='1%')
             ),
             html.Div(
                 id="componente-slider2",
                 children=[
-                    html.P("Humedad Relativa (%):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    html.P("Humedad Relativa (%):", style=dict(width='100%', textAlign='left', margin='1%')),
                     dcc.Slider(
                         id='slider-humedad',
                         min=0,
@@ -169,12 +169,12 @@ def generate_control_card():
                         }
                     )
                 ],
-                style=dict(width='95%', display='inline-block', margin='2%')
+                style=dict(width='95%', display='inline-block', margin='1%')
             ),
             html.Div(
                 id="componente-slider3",
                 children=[
-                    html.P("Temperatura (de bulbo húmedo °C):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    html.P("Temperatura (de bulbo húmedo °C):", style=dict(width='100%', textAlign='left', margin='1%')),
                     dcc.Slider(
                         id='slider-temperaturabulbo',
                         min=0,
@@ -188,12 +188,12 @@ def generate_control_card():
                         }
                     )
                 ],
-                style=dict(width='95%', display='inline-block', margin='2%')
+                style=dict(width='95%', display='inline-block', margin='1%')
             ),
             html.Div(
                 id="componente-slider4",
                 children=[
-                    html.P("Temperatura (de punto de rocío °C):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    html.P("Temperatura (de punto de rocío °C):", style=dict(width='100%', textAlign='left', margin='1%')),
                     dcc.Slider(
                         id='slider-temperaturarocio',
                         min=-50,
@@ -207,12 +207,12 @@ def generate_control_card():
                         }
                     )
                 ],
-                style=dict(width='95%', display='inline-block', margin='2%')
+                style=dict(width='95%', display='inline-block', margin='1%')
             ),
             html.Div(
                 id="componente-slider5",
                 children=[
-                    html.P("Presión estacionaria (hPa):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    html.P("Presión estacionaria (hPa):", style=dict(width='100%', textAlign='left', margin='1%')),
                     dcc.Slider(
                         id='slider-stationpressure',
                         min=20,
@@ -226,12 +226,12 @@ def generate_control_card():
                         }
                     )
                 ],
-                style=dict(width='95%', display='inline-block', margin='2%')
+                style=dict(width='95%', display='inline-block', margin='1%')
             ),
             html.Div(
                 id="componente-slider6",
                 children=[
-                    html.P("Altimetro (inHg):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    html.P("Altimetro (inHg):", style=dict(width='100%', textAlign='left', margin='1%')),
                     dcc.Slider(
                         id='slider-altimeter',
                         min=20,
@@ -245,8 +245,19 @@ def generate_control_card():
                         }
                     )
                 ],
-                style=dict(width='95%', display='inline-block', margin='2%')
-            )
+                style=dict(width='95%', display='inline-block', margin='1%')
+            ),
+            html.Br(),
+            html.Br(),
+            html.Br(),
+            html.Div([
+                html.Div([
+                    html.Button('Predecir Retraso', id='my-button', className='my-button-class', n_clicks=0, style=dict(width='100%', height='5%', display='inline-block', marginBottom='5%')),
+                ], className="four columns", style={'width': '48%'}),
+                html.Div([
+                    dcc.Markdown(children='TRUE o FALSE', id='prediction-output', className='my-predresult-class', style={"width":'50%', "height":'10%', "display":'inline-block', "margin-left":'10%', "margin-top":'1%', "margin-bottom":'5%', 'textAlign':'center'})
+                ], className="four columns", style={'width': '48%'}),
+            ], className="row"),
         ]
     )
 
