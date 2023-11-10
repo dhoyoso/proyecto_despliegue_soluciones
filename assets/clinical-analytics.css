@@ -292,3 +292,27 @@ H5, H3 {
     }
 
 }
+
+/* Date picker y hora input*/
+.DateInput, .DateInput_1, .HourInput {
+    border-radius: 4px 0 0 4px !important;
+    color: #7fafdf !important;
+    background-color: #252e3f !important;
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #ccc !important;
+}
+
+.DateInput_input, .DateInput_input_1, .HourInput_input {
+    height: 34px !important;
+    width: 100% !important;
+    border-radius: inherit;
+    background-color: #252e3f !important;
+    color: #7fafdf !important;
+}
+
+.SingleDatePickerInput__withBorder, .HourInput_withBorder {
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #ccc !important;
+    background-color: #252e3f !important;
+    color: #7fafdf !important;
+}

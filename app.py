@@ -20,11 +20,11 @@ def description_card():
     return html.Div(
         id="description-card",
         children=[
-            #html.H5("Proyecto 1"),
+            html.H5("Proyecto DSA Grupo 5"),
             html.H3("Predicción de retrasos en vuelos"),
             html.Div(
                 id="intro",
-                children="Esta herramienta contiene información sobre la demanda energética total en Austria cada hora según lo públicado en ENTSO-E Data Portal. Adicionalmente, permite realizar pronósticos hasta 5 dias en el futuro."
+                children="Esta interfaz proporciona a los operadores de aeropuertos una herramienta integral para prever y gestionar retrasos en vuelos. Los usuarios pueden ingresar información de las torres de control como datos de vuelos y condiciones climáticas para obtener predicciones precisas de posibles retrasos. Las visualizaciones del comportamiento histórico ayudan a equilibrar la distribución de pistas de embarque y optimizar la toma de decisiones operativas."
             ),
         ],
     )
@@ -36,84 +36,72 @@ def generate_control_card():
     return html.Div(
         id="control-card",
         children=[
-
             # Fecha inicial
-            html.P("Detalles del vuelo para predecir retrasos:"),
+            html.P("Información del vuelo y condiciones climáticas:"),
             dcc.Tab(),
             html.Div(
                 id="componentes-fecha-inicial",
                 children=[
-                    html.P("Fecha:",style=dict(width='10%', textAlign='center', margin= '2%')),
+                    html.P("Fecha:", style=dict(width='10%', textAlign='center', margin='2%')),
                     html.Div(
                         id="componente-fecha",
                         children=[
                             dcc.DatePickerSingle(
                                 id='datepicker-inicial',
-                                min_date_allowed=dt.datetime.now()-dt.timedelta(days=365),
-                                max_date_allowed=dt.datetime.now()+dt.timedelta(days=365),
+                                min_date_allowed=dt.datetime.now() - dt.timedelta(days=365),
+                                max_date_allowed=dt.datetime.now() + dt.timedelta(days=365),
                                 initial_visible_month=dt.datetime.now(),
                                 date=dt.datetime.now()
                             )
                         ],
-                        style=dict(width='20%')
+                        style=dict(width='40%', display='inline-block', margin='2%')
                     ),
-                    html.Div(
-                        id="campo-slider",
-                        children=[
-                            html.P("Hora:"),
-                            dcc.Slider(
-                                id="slider-proyeccion",
-                                min=0,
-                                max=24,
-                                step=1,
-                                value=0,
-                                marks=None,
-                                tooltip={"placement": "bottom", "always_visible": True},
-                            )
-                        ]
-                    ),
+                    html.P("Hora:", style=dict(width='10%', textAlign='center', margin='2%')),
                     html.Div(
                         id="componente-hora",
                         children=[
-                            dcc.Dropdown(
+                            dcc.Input(
                                 id="dropdown-hora-inicial-hora",
-                                options=[{"label": i, "value": i} for i in np.arange(0,25)],
+                                type='number',
                                 value=pd.to_datetime(dt.datetime.now()).hour,
-                                # style=dict(width='50%', display="inline-block")
+                                min=0,
+                                max=23,
+                                style=dict(width='100%'),
+                                className='HourInput'
+
                             )
                         ],
-                        style=dict(width='20%')
-                    ),
-                    
-                ],
-                style=dict(display='flex')
-            ),
-
-            html.Br(),
-
-            # Slider proyección
-            html.Div(
-                id="campo-slider",
-                children=[
-                    html.P("Ingrese horas a proyectar:"),
-                    dcc.Slider(
-                        id="slider-proyeccion",
-                        min=0,
-                        max=119,
-                        step=1,
-                        value=0,
-                        marks=None,
-                        tooltip={"placement": "bottom", "always_visible": True},
+                        style=dict(width='40%', display='inline-block', textAlign='center', margin='2%')
                     )
-                ]
-            )
-     
+                ],
+                style=dict(display='flex', justifyContent='space-between')
+            ),
+            html.Div(
+                        id="componente-slider",
+                        children=[
+                            html.P("Visibilidad:", style=dict(width='10%', textAlign='center', margin='2%')),
+                            dcc.Slider(
+                                id='slider-temperatura',
+                                min=0,
+                                max=100,
+                                value=65,
+                                marks={
+                                    0: {'label': '0°C', 'style': {'color': '#77b0b1'}},
+                                    26: {'label': '26°C'},
+                                    37: {'label': '37°C'},
+                                    100: {'label': '100°C', 'style': {'color': '#f50'}}
+                                }
+                            )
+                        ],
+                        style=dict(width='80%', display='inline-block', margin='2%')
+                    )
         ]
     )
 
+
 def graphs():
     return html.Div([
-    html.H1('Gráfico de Barras y Gráfico de Pastel Dash'),
+    html.H3('Historia de Retrasos'),
     html.Div([
         html.Div([
             html.Label('Selecciona un aeropuerto:'),
@@ -122,13 +110,13 @@ def graphs():
                 options=[
                     {'label': 'Todos', 'value': 'all'},  # Opción para seleccionar todos los aeropuertos
                 ] + [
-                    {'label': airport_id, 'value': airport_id}
+                    {'label': df[df['AirportID'] == airport_id].iloc[0]['AeropuertoOrigen'], 'value': airport_id}
                     for airport_id in df['AirportID'].unique()
                 ],
-                value='all'  # Valor predeterminado: "todos"
+                value='all',  # Valor predeterminado: "todos"
+                style={'width': '100%'}
             ),
-        ], className="four columns"),
-        #description_card(), generate_control_card(),
+        ], className="four columns", style={'width': '48%'}),
         html.Div([
             html.Label('Selecciona una aerolínea:'),
             dcc.Dropdown(
@@ -136,13 +124,15 @@ def graphs():
                 options=[
                     {'label': 'Todos', 'value': 'all'},  # Opción para seleccionar todas las aerolíneas
                 ] + [
-                    {'label': carrier, 'value': carrier}
+                    {'label': df[df['Carrier'] == carrier].iloc[0]['Aerolinea'], 'value': carrier}
                     for carrier in df['Carrier'].unique()
                 ],
-                value='all'  # Valor predeterminado: "todos"
+                value='all',  # Valor predeterminado: "todos"
+                style={'width': '100%'}
             ),
-        ], className="four columns"),
+        ], className="four columns", style={'width': '48%'}),
     ], className="row"),
+    html.Br(),
     html.Div([
         html.Div([
             dcc.Graph(id='bar-chart')
@@ -200,19 +190,21 @@ def actualizar_graficos(airport_id, carrier):
     if airport_id == 'all':
         # Si se selecciona "todos" en el menú de aeropuertos, se muestra un gráfico con todos los datos
         df_filtrado = df
-        title_bar = 'Cantidad de DepDel15 True en Todos los Aeropuertos'
+        title_bar = 'Cantidad de retrasos en todos los aeropuertos'
     else:
         # Filtra el DataFrame en función del valor seleccionado en el menú de aeropuertos
         df_filtrado = df[df['AirportID'] == airport_id]
-        title_bar = f'Cantidad de DepDel15 True en el Aeropuerto {airport_id}'
+        airport_name = df[df['AirportID'] == airport_id].iloc[0]['AeropuertoOrigen']
+        title_bar = f'Cantidad de retrasos en el aeropuerto <br> {airport_name}'
 
     if carrier == 'all':
         # Si se selecciona "todos" en el menú de aerolíneas, se muestra un gráfico con todos los datos
-        title_pie = 'Proporción de Vuelos Retrasados y No Retrasados en Todas las Aerolíneas'
+        title_pie = 'Proporción de retrasos en todas las aerolíneas'
     else:
         # Filtra el DataFrame en función del valor seleccionado en el menú de aerolíneas
         df_filtrado = df_filtrado[df_filtrado['Carrier'] == carrier]
-        title_pie = f'Proporción de Vuelos Retrasados y No Retrasados para la Aerolínea {carrier}'
+        carrier_name = df[df['Carrier'] == carrier].iloc[0]['Aerolinea']
+        title_pie = f'Proporción de retrasos para la aerolínea <br> {carrier_name}'
 
     # Combina Month y Day en una nueva columna para el eje x
     df_filtrado['Month_Day'] = df_filtrado['Month'].astype(str) + '-' + df_filtrado['Day'].astype(str)
@@ -228,7 +220,7 @@ def actualizar_graficos(airport_id, carrier):
         'layout': {
             'title': title_bar,
             'xaxis': {'title': 'Mes-Día'},
-            'yaxis': {'title': 'Cantidad DepDel15 True'},
+            'yaxis': {'title': 'Cantidad de Retrasos'},
         }
     }
 
