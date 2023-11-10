@@ -9,7 +9,7 @@ import plotly.express as px
 import random
 
 
-df = pd.read_csv('resultado_merge.csv')
+df = pd.read_csv('./assets/resultado_merge.csv')
 
 app = dash.Dash(__name__)
 
@@ -252,10 +252,10 @@ def generate_control_card():
             html.Br(),
             html.Div([
                 html.Div([
-                    html.Button('Predecir Retraso', id='my-button', className='my-button-class', n_clicks=0, style=dict(width='100%', height='5%', display='inline-block', marginBottom='5%')),
+                    html.Button('Predecir Retraso', id='my-button', className='my-button-class', n_clicks=0, style=dict(width='100%', height='5%', display='inline-block', marginBottom='5%', marginTop='3%')),
                 ], className="four columns", style={'width': '48%'}),
                 html.Div([
-                    dcc.Markdown(children='TRUE o FALSE', id='prediction-output', className='my-predresult-class', style={"width":'50%', "height":'10%', "display":'inline-block', "margin-left":'10%', "margin-top":'1%', "margin-bottom":'5%', 'textAlign':'center'})
+                    dcc.Markdown(children='Probabilidad Retraso: 85%', id='prediction-output', className='my-predresult-class', style={"width":'50%', "height":'10%', "display":'inline-block', "margin-left":'10%', "margin-top":'0%', "margin-bottom":'5%', 'textAlign':'center'})
                 ], className="four columns", style={'width': '48%'}),
             ], className="row"),
         ]
