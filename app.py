@@ -321,6 +321,7 @@ def graphs():
 # Define la interfaz de usuario con los menús desplegables, los gráficos de barras y el gráfico de pastel
 app.layout = html.Div(
     id="app-container",
+    style={'zoom': '75%'},
     children=[
         
         # Left column
