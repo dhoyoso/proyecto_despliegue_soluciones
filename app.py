@@ -83,47 +83,170 @@ def generate_control_card():
                                 date=dt.datetime.now()
                             )
                         ],
-                        style=dict(width='40%', display='inline-block', margin='2%')
-                    ),
-                    html.P("Hora:", style=dict(width='10%', textAlign='center', margin='2%')),
-                    html.Div(
-                        id="componente-hora",
-                        children=[
-                            dcc.Input(
-                                id="dropdown-hora-inicial-hora",
-                                type='number',
-                                value=pd.to_datetime(dt.datetime.now()).hour,
-                                min=0,
-                                max=23,
-                                style=dict(width='100%'),
-                                className='HourInput'
-
-                            )
-                        ],
-                        style=dict(width='40%', display='inline-block', textAlign='center', margin='2%')
+                        style=dict(width='95%', display='inline-block', margin='2%')
                     )
                 ],
-                style=dict(display='flex', justifyContent='space-between')
+                style=dict(display='flex', width='95%')
+            ),
+            html.Div([
+                    html.Label('Selecciona un aeropuerto origen:'),
+                    dcc.Dropdown(
+                        id='airport-dropdown-control-origin',
+                        options=[
+                            {'label': 'Todos', 'value': 'all'},  # Opción para seleccionar todos los aeropuertos
+                        ] + [
+                            {'label': df[df['AirportID'] == airport_id].iloc[0]['AeropuertoOrigen'], 'value': airport_id}
+                            for airport_id in df['AirportID'].unique()
+                        ],
+                        value='all',  # Valor predeterminado: "todos"
+                        style={'width': '100%'}
+                    ),
+                ], className="four columns", style={'width': '95%', 'margin':'2%'}
+            ),
+            html.Div([
+                    html.Label('Selecciona un aeropuerto destino:'),
+                    dcc.Dropdown(
+                        id='airport-dropdown-control-destiny',
+                        options=[
+                            {'label': 'Todos', 'value': 'all'},  # Opción para seleccionar todos los aeropuertos
+                        ] + [
+                            {'label': df[df['DestAirportID'] == airport_id].iloc[0]['AeropuertoDestino'], 'value': airport_id}
+                            for airport_id in df['DestAirportID'].unique()
+                        ],
+                        value='all',  # Valor predeterminado: "todos"
+                        style={'width': '100%'}
+                    ),
+                ], className="four columns", style={'width': '95%', 'margin':'2%'}
+            ),
+            html.Div([
+                    html.Label('Selecciona una aerolínea:'),
+                    dcc.Dropdown(
+                        id='carrier-dropdown-control',
+                        options=[
+                            {'label': 'Todos', 'value': 'all'},  # Opción para seleccionar todas las aerolíneas
+                        ] + [
+                            {'label': df[df['Carrier'] == carrier].iloc[0]['Aerolinea'], 'value': carrier}
+                            for carrier in df['Carrier'].unique()
+                        ],
+                        value='all',  # Valor predeterminado: "todos"
+                        style={'width': '100%'}
+                    ),
+                ], className="four columns", style={'width': '95%', 'margin':'2%'}
             ),
             html.Div(
-                        id="componente-slider",
-                        children=[
-                            html.P("Visibilidad:", style=dict(width='10%', textAlign='center', margin='2%')),
-                            dcc.Slider(
-                                id='slider-temperatura',
-                                min=0,
-                                max=100,
-                                value=65,
-                                marks={
-                                    0: {'label': '0°C', 'style': {'color': '#77b0b1'}},
-                                    26: {'label': '26°C'},
-                                    37: {'label': '37°C'},
-                                    100: {'label': '100°C', 'style': {'color': '#f50'}}
-                                }
-                            )
-                        ],
-                        style=dict(width='80%', display='inline-block', margin='2%')
+                id="componente-slider",
+                children=[
+                    html.P("Velocidad del Viento (m/s):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    dcc.Slider(
+                        id='slider-viento',
+                        min=0,
+                        max=10,
+                        step=0.5,
+                        value=5,
+                        marks={
+                            0: {'label': '0m/s', 'style': {'color': '#8fce00'}},
+                            5: {'label': '5m/s', 'style': {'color': '#ffd966'}},
+                            10: {'label': '10m/s', 'style': {'color': '#f50'}}
+                        }
                     )
+                ],
+                style=dict(width='95%', display='inline-block', margin='2%')
+            ),
+            html.Div(
+                id="componente-slider2",
+                children=[
+                    html.P("Humedad Relativa (%):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    dcc.Slider(
+                        id='slider-humedad',
+                        min=0,
+                        max=100,
+                        step=1,
+                        value=50,
+                        marks={
+                            0: {'label': '0%', 'style': {'color': '#8fce00'}},
+                            50: {'label': '50%', 'style': {'color': '#ffd966'}},
+                            100: {'label': '100%', 'style': {'color': '#f50'}}
+                        }
+                    )
+                ],
+                style=dict(width='95%', display='inline-block', margin='2%')
+            ),
+            html.Div(
+                id="componente-slider3",
+                children=[
+                    html.P("Temperatura (de bulbo húmedo °C):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    dcc.Slider(
+                        id='slider-temperaturabulbo',
+                        min=0,
+                        max=50,
+                        step=1,
+                        value=25,
+                        marks={
+                            0: {'label': '0°C', 'style': {'color': '#8fce00'}},
+                            25: {'label': '25°C', 'style': {'color': '#ffd966'}},
+                            50: {'label': '50°C', 'style': {'color': '#f50'}}
+                        }
+                    )
+                ],
+                style=dict(width='95%', display='inline-block', margin='2%')
+            ),
+            html.Div(
+                id="componente-slider4",
+                children=[
+                    html.P("Temperatura (de punto de rocío °C):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    dcc.Slider(
+                        id='slider-temperaturarocio',
+                        min=-50,
+                        max=50,
+                        step=1,
+                        value=0,
+                        marks={
+                            -50: {'label': '-50°C', 'style': {'color': '#8fce00'}},
+                            0: {'label': '0°C', 'style': {'color': '#ffd966'}},
+                            50: {'label': '50°C', 'style': {'color': '#f50'}}
+                        }
+                    )
+                ],
+                style=dict(width='95%', display='inline-block', margin='2%')
+            ),
+            html.Div(
+                id="componente-slider5",
+                children=[
+                    html.P("Presión estacionaria (hPa):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    dcc.Slider(
+                        id='slider-stationpressure',
+                        min=20,
+                        max=40,
+                        step=0.1,
+                        value=30,
+                        marks={
+                            20: {'label': '20hPa', 'style': {'color': '#8fce00'}},
+                            30: {'label': '30hPa', 'style': {'color': '#ffd966'}},
+                            40: {'label': '40hPa', 'style': {'color': '#f50'}}
+                        }
+                    )
+                ],
+                style=dict(width='95%', display='inline-block', margin='2%')
+            ),
+            html.Div(
+                id="componente-slider6",
+                children=[
+                    html.P("Altimetro (inHg):", style=dict(width='100%', textAlign='left', margin='2%')),
+                    dcc.Slider(
+                        id='slider-altimeter',
+                        min=20,
+                        max=40,
+                        step=0.1,
+                        value=30,
+                        marks={
+                            20: {'label': '20inHg', 'style': {'color': '#8fce00'}},
+                            30: {'label': '30inHg', 'style': {'color': '#ffd966'}},
+                            40: {'label': '40inHg', 'style': {'color': '#f50'}}
+                        }
+                    )
+                ],
+                style=dict(width='95%', display='inline-block', margin='2%')
+            )
         ]
     )
 
