@@ -5,6 +5,9 @@ import pandas as pd
 import plotly.graph_objs as go
 import datetime as dt
 import numpy as np
+import plotly.express as px
+import random
+
 
 df = pd.read_csv('resultado_merge.csv')
 
@@ -12,6 +15,15 @@ app = dash.Dash(__name__)
 
 # Agrega una columna 'Cancelled' en formato numérico (0 o 1) para contar las cancelaciones
 df['Cancelled'] = df['Cancelled'].astype(int)
+
+
+def generate_random_color(n):
+    color_list = []
+    for i in range(n):
+        color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        color_list.append(color)
+    return color_list
+
 
 def description_card():
     """
@@ -28,6 +40,23 @@ def description_card():
             ),
         ],
     )
+
+
+def create_counters():
+    """
+    :return: A Div containing descriptive counters.
+    """
+    return html.Div([
+        html.Div([
+            html.P(f"Número de aeropuertos: ", id='aeropuertos-counter'),
+            html.P(f"Número de aerolíneas: ", id='aerolineas-counter'),       
+        ], className="four columns", style={'width': '48%'}),
+        html.Div([
+            html.P(f"Número de vuelos: ", id='vuelos-counter'),
+            html.P(f"Número de retrasos en la historia: ", id='retrasos-counter'),     
+        ], className="four columns", style={'width': '48%'}),
+    ], className="row")
+    
 
 def generate_control_card():
     """
@@ -133,6 +162,8 @@ def graphs():
         ], className="four columns", style={'width': '48%'}),
     ], className="row"),
     html.Br(),
+    create_counters(),
+    html.Br(),
     html.Div([
         html.Div([
             dcc.Graph(id='bar-chart')
@@ -141,7 +172,17 @@ def graphs():
             dcc.Graph(id='pie-chart')
         ], className="six columns"),
     ], className="row"),
+    html.Br(),
+    html.Div([
+        html.Div([
+            dcc.Graph(id='bar-chart2')
+        ], className="six columns"),
+        html.Div([
+            dcc.Graph(id='pie-chart2')
+        ], className="six columns"),
+    ], className="row")
 ])
+
 
 # Define la interfaz de usuario con los menús desplegables, los gráficos de barras y el gráfico de pastel
 app.layout = html.Div(
@@ -181,12 +222,14 @@ app.layout = html.Div(
     ],
 )
 
-# Crea una función de callback para actualizar los gráficos en función de las selecciones en los menús desplegables
+
+# Crea una función de callback para actualizar los gráficos y contadores en función de las selecciones en los menús desplegables
 @app.callback(
-    [Output('bar-chart', 'figure'), Output('pie-chart', 'figure')],
+    [Output('bar-chart', 'figure'), Output('pie-chart', 'figure'), Output('bar-chart2', 'figure'), Output('pie-chart2', 'figure'), 
+     Output('aeropuertos-counter', 'children'), Output('aerolineas-counter', 'children'), Output('vuelos-counter', 'children'), Output('retrasos-counter', 'children')],
     [Input('airport-dropdown', 'value'), Input('carrier-dropdown', 'value')]
 )
-def actualizar_graficos(airport_id, carrier):
+def actualizar_graficos_y_contadores(airport_id, carrier):
     if airport_id == 'all':
         # Si se selecciona "todos" en el menú de aeropuertos, se muestra un gráfico con todos los datos
         df_filtrado = df
@@ -206,20 +249,20 @@ def actualizar_graficos(airport_id, carrier):
         carrier_name = df[df['Carrier'] == carrier].iloc[0]['Aerolinea']
         title_pie = f'Proporción de retrasos para la aerolínea <br> {carrier_name}'
 
-    # Combina Month y Day en una nueva columna para el eje x
-    df_filtrado['Month_Day'] = df_filtrado['Month'].astype(str) + '-' + df_filtrado['Day'].astype(str)
-
     # Agrupa los datos por Month_Day y cuenta la cantidad de DepDel15 True
-    data_bar = df_filtrado.groupby('Month_Day')['DepDel15'].sum().reset_index()
+    data_bar = df_filtrado.groupby('Day')['DepDel15'].sum().reset_index()
+
+    # Use the function to generate a list of 31 random colors
+    custom_colors = generate_random_color(31)
 
     # Crea el gráfico de barras
     fig_bar = {
         'data': [
-            {'x': data_bar['Month_Day'], 'y': data_bar['DepDel15'], 'type': 'bar', 'name': 'DepDel15 True'},
+            {'x': data_bar['Day'], 'y': data_bar['DepDel15'], 'type': 'bar', 'name': 'DepDel15 True', 'marker': {'color': custom_colors}},
         ],
         'layout': {
             'title': title_bar,
-            'xaxis': {'title': 'Mes-Día'},
+            'xaxis': {'title': 'Día del mes'},
             'yaxis': {'title': 'Cantidad de Retrasos'},
         }
     }
@@ -238,6 +281,8 @@ def actualizar_graficos(airport_id, carrier):
                 labels=labels_pie,
                 values=values_pie,
                 textinfo='percent',
+                marker=dict(colors=px.colors.qualitative.Set1)
+
             ),
         ],
         'layout': {
@@ -245,8 +290,62 @@ def actualizar_graficos(airport_id, carrier):
         }
     }
 
-    return fig_bar, fig_pie
+    # Agrupa los datos por DayOfWeek y cuenta la cantidad de DepDel15 True
+    data_bar2 = df_filtrado.groupby('DayOfWeek')['DepDel15'].sum().reset_index()
+
+    # Create a dictionary for the mapping
+    mapping_dict = {
+        1: 'lunes',
+        2: 'martes',
+        3: 'miercoles',
+        4: 'jueves',
+        5: 'viernes',
+        6: 'sabado',
+        7: 'domingo'
+    }
+
+    # Map the values in the 'DayOfWeek' column to their corresponding Spanish names
+    data_bar2['DayOfWeek'] = data_bar2['DayOfWeek'].map(mapping_dict)
+
+    colores = ['rgb(31, 119, 180)', 'rgb(255, 127, 14)', 'rgb(44, 160, 44)', 'rgb(214, 39, 40)', 'rgb(148, 103, 189)',
+                    'rgb(140, 86, 75)', 'rgb(227, 119, 194)', 'rgb(127, 127, 127)', 'rgb(188, 189, 34)', 'rgb(23, 190, 207)']
+
+    fig_line = {
+        'data': [
+            {'x': data_bar2['DayOfWeek'], 'y': data_bar2['DepDel15'], 'type': 'line', 'name': 'DepDel15 True', 'marker': {'color': colores}},
+        ],
+        'layout': {
+            'title': title_bar+'<br> dependiendo del día de la semana',
+            'xaxis': {'title': 'Día de la semana'},
+            'yaxis': {'title': 'Cantidad de Retrasos'},
+        }
+    }
+
+
+    # Calcula la temperatura promedio por día de la semana
+    vuelos_por_dia = df_filtrado.value_counts('Day').reset_index()
+    vuelos_por_dia.rename(columns={vuelos_por_dia.columns[1]: 'Cantidad Vuelos'}, inplace=True)
+
+    # Crea el gráfico de barras
+    fig = px.bar(vuelos_por_dia, x="Day", y="Cantidad Vuelos", title=title_bar.replace('Cantidad de retrasos', 'Cantidad de vuelos'), 
+                labels={'Day': 'Día del mes', 'Day':'Día del mes'}, color="Cantidad Vuelos",
+                )
+    
+   
+    aeropuertos_count = len(df_filtrado['AirportID'].unique())
+    aerolineas_count = len(df_filtrado['Carrier'].unique())
+    vuelos_count = df_filtrado.shape[0]
+
+    return fig_bar, fig_pie, fig_line, fig, f"Número de aeropuertos: {aeropuertos_count}", f"Número de aerolíneas: {aerolineas_count}", f"Número de vuelos: {vuelos_count}", f"Vuelos retrasados: {vuelos_retrasados}"
+
+
+
 
 # Ejecuta la aplicación
 if __name__ == '__main__':
     app.run_server(debug=True)
+
+
+# Poner controles de entrada para predicción.
+# Poner sección de referenciación de datos.
+# Cambiar colores del tema? 
