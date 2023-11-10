@@ -478,7 +478,7 @@ def actualizar_graficos_y_contadores(airport_id, carrier):
 
 # Ejecuta la aplicación
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host="0.0.0.0", debug=True)
 
 
 # Poner controles de entrada para predicción.
