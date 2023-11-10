@@ -49,8 +49,7 @@ La información se descarga directamente de la página del Buró https://www.bts
    ┗ 📄 .gitignore --> Archivo para ignorar archivos de datos (pues estos los maneja DVC).
  ```
 # MLFlow
-Se realiza corrida de modelos para validar desempeño de posibles modelos a implementar en tablero final, modificando diferentes hiperparámetros
-![Alt text](./Images/MLFlow1.png)
+Con el mejor modelo validado en instancias locales, se procedio realizar en una maquina virtual la corrida con diferentes hiperparametros para encontrar el modelo con el mejor desempeño de posible e implementarlo en el tablero final.
 
 ## Integrantes del equipo
 * Claudia Marcela Baquero Rico
