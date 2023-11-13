@@ -39,10 +39,18 @@ La información se descarga directamente de la página del Buró https://www.bts
  ┣ 📄 Exploración_base_vuelos.ipynb --> Notebook con la preprocesamiento y exploración de la base de vuelos.
  ┣ 📄 Exploración_base_clima.ipynb --> Notebook con la preprocesamiento y exploración de la base de clima.
  ┣ 📄 Integración_base_final.ipynb --> Notebook con la integración de las bases de clima y vuelos.
+ ┣ 📄 Merge_nombres.py --> Script de Python con unificación valores de referencia con nombres de aerolineas y aeropuertos.
  ┣ 📄 mlflow-flight-delay.py --> Script de python para registrar los experimentos de entrenamiento y evaluación en mlflow.
+ ┣ 📄 mlflow_flight_delay_VF.py --> Script de python para registrar los experimentos de entrenamiento y evaluación en mlflow. Versión final.
  ┣ 📄 README.md --> Documento de orientación y explicación del proyecto y sus archivos.
  ┣ 📄 .dvcignore --> Define archivos a ignorar por el sistema de control de versiones en relación con los datos.
  ┣ 📂 .dvc --> Carpeta con la configuración de DVC.
+ ┣ 📂 dashboard --> Carpeta con la configuración de DVC.
+ ┃ ┣ 📄 app.py --> Codigo fuente tablero en dash.
+ ┃ ┣ 📂 assets --> Carpeta con estilos css del tablero y data histórica.
+ ┃ ┃ ┣ 📄 base.css --> Archivo con estilos css base.
+ ┃ ┃ ┣ 📄 clinical-analytics.css --> Archivo con estilos css.
+ ┃ ┗ ┗ 📄 resultado_merge.csv --> Archivo csv con data histórica.
  ┗ 📂 data --> Carpeta con los datos a trabajar.
    ┣ 📄 Weather Dataset.csv.dvc --> Archivo con los metadatos de DVC del conjunto de datos de condiciones climáticas.
    ┣ 📄 Flight Delays Data.csv.dvc --> Archivo con los metadatos de DVC del conjunto de datos de vuelos.
