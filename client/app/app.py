@@ -21,7 +21,7 @@ api_url = os.getenv('API_URL')
 api_url = "http://{}:8001/api/v1/predict".format(api_url)
 
 # QUEMADA, ELIMINAR O COMENTAR LUEGO
-api_url = "http://ec2-54-89-139-5.compute-1.amazonaws.com:8001/api/v1/predict"
+api_url = "http://ec2-44-211-174-96.compute-1.amazonaws.com:8001/api/v1/predict"
 
 
 def generate_random_color(n):
@@ -90,22 +90,20 @@ def generate_control_card():
                                 date=dt.datetime.now().strftime("%Y-%m-%d")
                             )
                         ],
-                        style=dict(width='95%', display='inline-block', margin='1%')
+                        style=dict(width='100%', height='110%', display='inline-block', margin='1%')
                     )
                 ],
-                style=dict(display='flex', width='95%')
+                style=dict(display='flex', width='95%', height='110%')
             ),
             html.Div([
                     html.Label('Selecciona un aeropuerto origen:'),
                     dcc.Dropdown(
                         id='airport-dropdown-control-origin',
-                        options=[
-                            {'label': 'Todos', 'value': 'all'},  # Opción para seleccionar todos los aeropuertos
-                        ] + [
+                        options= [
                             {'label': df[df['AirportID'] == airport_id].iloc[0]['AeropuertoOrigen'], 'value': airport_id}
                             for airport_id in df['AirportID'].unique()
                         ],
-                        value='all',  # Valor predeterminado: "todos"
+                        value=11057,  # Valor predeterminado: "todos"
                         style={'width': '100%'}
                     ),
                 ], className="four columns", style={'width': '95%', 'margin':'1%'}
@@ -115,12 +113,10 @@ def generate_control_card():
                     dcc.Dropdown(
                         id='airport-dropdown-control-destiny',
                         options=[
-                            {'label': 'Todos', 'value': 'all'},  # Opción para seleccionar todos los aeropuertos
-                        ] + [
                             {'label': df[df['DestAirportID'] == airport_id].iloc[0]['AeropuertoDestino'], 'value': airport_id}
                             for airport_id in df['DestAirportID'].unique()
                         ],
-                        value='all',  # Valor predeterminado: "todos"
+                        value=12339,  # Valor predeterminado: "todos"
                         style={'width': '100%'}
                     ),
                 ], className="four columns", style={'width': '95%', 'margin':'1%'}
@@ -154,7 +150,7 @@ def generate_control_card():
                         min=0,
                         max=100,
                         step=1,
-                        value=25,
+                        value=98,
                         marks={
                             0: {'label': '0%', 'style': {'color': '#8fce00'}},
                             50: {'label': '50%', 'style': {'color': '#ffd966'}},
@@ -174,7 +170,7 @@ def generate_control_card():
                         min=0,
                         max=50,
                         step=1,
-                        value=12,
+                        value=18,
                         marks={
                             0: {'label': '0°C', 'style': {'color': '#8fce00'}},
                             25: {'label': '25°C', 'style': {'color': '#ffd966'}},
@@ -510,21 +506,30 @@ def actualizar_slider_values(valor_viento, valor_humedad, valor_temperaturabulbo
                              valor_temperaturarocio, valor_stationpressure,
                              valor_altimeter, valor_visibilidad, aeropuerto_origen, aeropuerto_destino, fecha):
     
+    cont = random.choice([0, 1])
+
     date_format = "%Y-%m-%d"
 
     # Convert the string to a datetime object
     fecha = datetime.strptime(fecha, date_format)
 
-    # Generate a random boolean value
-    aa = random.choice([True, False])
-    # Generate a random boolean value
-    sp = random.choice([True, False])
-    # Generate a random boolean value
-    symt = random.choice([True, False])
-    # Generate a random float between -20 and 50 for temperature dry bulb
-    valor_temperaturabulboseco = round(random.uniform(-20, 50),1)
-    # Generate a random float between -20 and 50 for wind direction
-    valor_direccionviento = round(random.uniform(0, 360),0)
+    if cont != 0:
+        # Generate a random boolean value
+        aa = random.choice([True, False])
+        # Generate a random boolean value
+        sp = random.choice([True, False])
+        # Generate a random boolean value
+        symt = random.choice([True, False])
+        # Generate a random float between -20 and 50 for temperature dry bulb
+        valor_temperaturabulboseco = round(random.uniform(-20, 50),1)
+        # Generate a random float between -20 and 50 for wind direction
+        valor_direccionviento = round(random.uniform(0, 360),0)
+    else:
+        aa = False
+        sp = False
+        symt = True
+        valor_temperaturabulboseco = 36.2
+        valor_direccionviento = 241
 
     if aeropuerto_origen == 'all':
         aeropuerto_origen = int(random.uniform(10000, 15000))
@@ -537,7 +542,7 @@ def actualizar_slider_values(valor_viento, valor_humedad, valor_temperaturabulbo
         "inputs": [
             {
                 "Month": fecha.month,
-                "DayOfWeek": fecha.weekday(),
+                "DayOfWeek": fecha.weekday()+1,
                 "DestAirportID": aeropuerto_destino,
                 "AirportID": aeropuerto_origen,
                 "Day": fecha.day,
@@ -561,7 +566,7 @@ def actualizar_slider_values(valor_viento, valor_humedad, valor_temperaturabulbo
                 f"Temperatura Bulbo Húmedo: {valor_temperaturabulbohumedo}, Temperatura Rocío: {valor_temperaturarocio}, Temperatura Bulbo Seco: {valor_temperaturabulboseco}, " \
                 f"Presión Estacionaria: {valor_stationpressure}, Altimetro: {valor_altimeter}, " \
                 f"Visibilidad: {valor_visibilidad}, ID Aeropuerto Origen: {aeropuerto_origen}, ID Aeropuerto Destino: {aeropuerto_destino}, " \
-                f"Día de la semana: {fecha.weekday()}, Día del mes: {fecha.day}, Mes: {fecha.month}, AA: {aa}, SP: {sp}, SYMT: {symt}." 
+                f"Día de la semana: {fecha.weekday()+1}, Día del mes: {fecha.day}, Mes: {fecha.month}, AA: {aa}, SP: {sp}, SYMT: {symt}." 
                 
     #print(valores_sliders)
     #print(len(valores_sliders))
