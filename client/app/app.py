@@ -20,7 +20,7 @@ app = dash.Dash(__name__)
 api_url = os.getenv('API_URL')
 api_url = "http://{}:8001/api/v1/predict".format(api_url)
 
-# QUEMADA, ELIMINAR LUEGO
+# QUEMADA, ELIMINAR O COMENTAR LUEGO
 api_url = "http://ec2-54-89-139-5.compute-1.amazonaws.com:8001/api/v1/predict"
 
 
