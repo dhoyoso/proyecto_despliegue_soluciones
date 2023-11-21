@@ -1,4 +1,4 @@
-Month;DayOfWeek;DestAirportID;AirportID;Day;Visibility;DryBulbCelsius;WetBulbCelsius;DewPointCelsius;RelativeHumidity;WindSpeed;WindDirection;StationPressure;Altimeter;AA;SP;SY-MT
+Month;DayOfWeek;DestAirportID;AirportID;Day;Visibility;DryBulbCelsius;WetBulbCelsius;DewPointCelsius;RelativeHumidity;WindSpeed;WindDirection;StationPressure;Altimeter;AA;SP;SYMT
 4;5;13303;11433;19;10.0;7.2;6.9;6.7;96.0;16.0;220.0;28.75;29.45;True;False;False
 4;5;13303;11433;19;10.0;7.0;6.6;6.0;93.0;21.0;220.0;28.77;29.47;False;True;False
 4;5;11298;11433;19;10.0;7.2;6.9;6.7;96.0;16.0;220.0;28.75;29.45;True;False;False

@@ -55,7 +55,7 @@ class DataInputSchema(BaseModel):
     Altimeter: Optional[float]
     AA: Optional[bool]
     SP: Optional[bool]
-    "SY-MT": Optional[bool]
+    SYMT: Optional[bool]
 
 
 class MultipleDataInputs(BaseModel):
