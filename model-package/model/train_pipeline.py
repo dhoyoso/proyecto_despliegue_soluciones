@@ -1,6 +1,6 @@
 import numpy as np
 from config.core import config
-from pipeline import abandono_pipe
+from pipeline import retrasos_pipe
 from processing.data_manager import load_dataset, save_pipeline
 from sklearn.model_selection import train_test_split
 
@@ -20,14 +20,12 @@ def run_training() -> None:
         # for reproducibility
         random_state=config.model_config.random_state,
     )
-    #y_train = np.log(y_train)
-    y_train = y_train.map(config.model_config.qual_mappings)
 
     # fit model
-    abandono_pipe.fit(X_train, y_train)
+    retrasos_pipe.fit(X_train, y_train)
 
     # persist trained model
-    save_pipeline(pipeline_to_persist=abandono_pipe)
+    save_pipeline(pipeline_to_persist=retrasos_pipe)
 
 
 if __name__ == "__main__":
