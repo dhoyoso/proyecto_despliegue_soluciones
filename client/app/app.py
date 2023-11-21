@@ -21,7 +21,7 @@ api_url = os.getenv('API_URL')
 api_url = "http://{}:8001/api/v1/predict".format(api_url)
 
 # QUEMADA, ELIMINAR O COMENTAR LUEGO
-api_url = "http://ec2-44-211-174-96.compute-1.amazonaws.com:8001/api/v1/predict"
+# api_url = "http://ec2-44-211-174-96.compute-1.amazonaws.com:8001/api/v1/predict"
 
 
 def generate_random_color(n):
