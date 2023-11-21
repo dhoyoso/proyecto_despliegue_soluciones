@@ -8,10 +8,6 @@ retrasos_pipe = Pipeline(
     [
         ("Gradient Boosting Classifier",
             GradientBoostingClassifier(
-                n_estimators = config.model_config.n_estimators, 
-                max_depth = config.model_config.max_depth,
-                random_state=config.model_config.random_state,
-
                 n_estimators=config.model_config.n_estimators,
                 max_depth=config.model_config.max_depth,
                 max_features=config.model_config.max_features,
