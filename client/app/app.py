@@ -5,11 +5,12 @@ from dash.dependencies import Input, Output
 import pandas as pd
 import plotly.graph_objs as go
 import datetime as dt
-import numpy as np
 import plotly.express as px
 import random
 from datetime import datetime
-
+import requests
+from loguru import logger
+import json
 
 df = pd.read_csv('./assets/resultado_merge.csv')
 
@@ -20,8 +21,7 @@ api_url = os.getenv('API_URL')
 api_url = "http://{}:8001/api/v1/predict".format(api_url)
 
 # QUEMADA, ELIMINAR LUEGO
-api_url = "http://{}:8001/api/v1/predict".format(api_url)
-
+api_url = "http://ec2-54-89-139-5.compute-1.amazonaws.com:8001/api/v1/predict"
 
 
 def generate_random_color(n):
@@ -493,17 +493,18 @@ def actualizar_graficos_y_contadores(airport_id, carrier):
 
 
 @app.callback(
-    Output('slider-values-output', 'children'),
+    [Output('slider-values-output', 'children'),
+     Output('prediction-output', 'children')],
     [Input('slider-viento', 'value'),
      Input('slider-humedad', 'value'),
      Input('slider-temperaturabulbo', 'value'),
      Input('slider-temperaturarocio', 'value'),
      Input('slider-stationpressure', 'value'),
      Input('slider-altimeter', 'value'),
-     Input('slider-visibilidad', 'value')],
+     Input('slider-visibilidad', 'value'),
      Input('airport-dropdown-control-origin', 'value'), 
      Input('airport-dropdown-control-destiny', 'value'),
-     Input('datepicker-inicial', 'date')
+     Input('datepicker-inicial', 'date')]
 )
 def actualizar_slider_values(valor_viento, valor_humedad, valor_temperaturabulbohumedo,
                              valor_temperaturarocio, valor_stationpressure,
@@ -531,11 +532,32 @@ def actualizar_slider_values(valor_viento, valor_humedad, valor_temperaturabulbo
     if aeropuerto_destino == 'all':
         aeropuerto_destino = int(random.uniform(10000, 15000))
 
-    # Crear una lista con los valores de los sliders en el mismo orden
-    valores_sliders = [fecha.month, fecha.weekday(), aeropuerto_destino, aeropuerto_origen, fecha.day, valor_visibilidad, valor_temperaturabulboseco,
-                       valor_temperaturabulbohumedo, valor_temperaturarocio,valor_humedad, valor_viento, valor_direccionviento, valor_stationpressure, valor_altimeter, aa, sp, symt]
+    # Crear un JSON con los parametros de la predicción.
+    myreq = {
+        "inputs": [
+            {
+                "Month": fecha.month,
+                "DayOfWeek": fecha.weekday(),
+                "DestAirportID": aeropuerto_destino,
+                "AirportID": aeropuerto_origen,
+                "Day": fecha.day,
+                "Visibility": valor_visibilidad,
+                "DryBulbCelsius": valor_temperaturabulboseco,
+                "WetBulbCelsius": valor_temperaturabulbohumedo,
+                "DewPointCelsius": valor_temperaturarocio,
+                "RelativeHumidity": valor_humedad,
+                "WindSpeed": valor_viento,
+                "WindDirection": valor_direccionviento,
+                "StationPressure": valor_stationpressure,
+                "Altimeter": valor_altimeter,
+                "AA": aa,
+                "SP": sp,
+                "SYMT": symt
+            }
+        ]
+      }
     
-    resultado = f"Velocidad Viento: {valor_viento}, Humedad: {valor_humedad}, Direccion Viento: {valor_direccionviento}, " \
+    predictores = f"Velocidad Viento: {valor_viento}, Humedad: {valor_humedad}, Direccion Viento: {valor_direccionviento}, " \
                 f"Temperatura Bulbo Húmedo: {valor_temperaturabulbohumedo}, Temperatura Rocío: {valor_temperaturarocio}, Temperatura Bulbo Seco: {valor_temperaturabulboseco}, " \
                 f"Presión Estacionaria: {valor_stationpressure}, Altimetro: {valor_altimeter}, " \
                 f"Visibilidad: {valor_visibilidad}, ID Aeropuerto Origen: {aeropuerto_origen}, ID Aeropuerto Destino: {aeropuerto_destino}, " \
@@ -543,11 +565,19 @@ def actualizar_slider_values(valor_viento, valor_humedad, valor_temperaturabulbo
                 
     #print(valores_sliders)
     #print(len(valores_sliders))
+    headers =  {"Content-Type":"application/json", "accept": "application/json"}
 
-    return resultado
+    # POST call to the API
+    response = requests.post(api_url, data=json.dumps(myreq), headers=headers)
+    data = response.json()
+    logger.info("Response: {}".format(data))
+
+    # Pick model_output to return from json format
+    prediccion = "ALTO riesgo de retraso" if round(data["predictions"][0])==1 else "BAJO riesgo de retraso"
+
+    return predictores, prediccion
 
 # Ejecuta la aplicación
 if __name__ == '__main__':
+    logger.info("Running dash")
     app.run_server(host="0.0.0.0", debug=True)
-
-# Pegarle a endpoint y predecir.
