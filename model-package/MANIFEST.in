@@ -4,7 +4,7 @@ include *.pkl
 recursive-include ./model/*
 
 include model/datasets/*.csv
-include model/trained_models/*.pkl
+include model/trained/*.pkl
 include model/VERSION
 include model/config.yml
 
