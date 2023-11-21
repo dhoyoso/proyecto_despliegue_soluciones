@@ -1,20 +1,27 @@
+import os
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
 import pandas as pd
 import plotly.graph_objs as go
 import datetime as dt
-import numpy as np
 import plotly.express as px
 import random
-
+from datetime import datetime
+import requests
+from loguru import logger
+import json
 
 df = pd.read_csv('./assets/resultado_merge.csv')
 
 app = dash.Dash(__name__)
 
-# Agrega una columna 'Cancelled' en formato numérico (0 o 1) para contar las cancelaciones
-df['Cancelled'] = df['Cancelled'].astype(int)
+# PREDICTION API URL 
+api_url = os.getenv('API_URL')
+api_url = "http://{}:8001/api/v1/predict".format(api_url)
+
+# QUEMADA, ELIMINAR O COMENTAR LUEGO
+# api_url = "http://ec2-44-211-174-96.compute-1.amazonaws.com:8001/api/v1/predict"
 
 
 def generate_random_color(n):
@@ -80,25 +87,23 @@ def generate_control_card():
                                 min_date_allowed=dt.datetime.now() - dt.timedelta(days=365),
                                 max_date_allowed=dt.datetime.now() + dt.timedelta(days=365),
                                 initial_visible_month=dt.datetime.now(),
-                                date=dt.datetime.now()
+                                date=dt.datetime.now().strftime("%Y-%m-%d")
                             )
                         ],
-                        style=dict(width='95%', display='inline-block', margin='1%')
+                        style=dict(width='100%', height='110%', display='inline-block', margin='1%')
                     )
                 ],
-                style=dict(display='flex', width='95%')
+                style=dict(display='flex', width='95%', height='110%')
             ),
             html.Div([
                     html.Label('Selecciona un aeropuerto origen:'),
                     dcc.Dropdown(
                         id='airport-dropdown-control-origin',
-                        options=[
-                            {'label': 'Todos', 'value': 'all'},  # Opción para seleccionar todos los aeropuertos
-                        ] + [
+                        options= [
                             {'label': df[df['AirportID'] == airport_id].iloc[0]['AeropuertoOrigen'], 'value': airport_id}
                             for airport_id in df['AirportID'].unique()
                         ],
-                        value='all',  # Valor predeterminado: "todos"
+                        value=11057,  # Valor predeterminado: "todos"
                         style={'width': '100%'}
                     ),
                 ], className="four columns", style={'width': '95%', 'margin':'1%'}
@@ -108,27 +113,10 @@ def generate_control_card():
                     dcc.Dropdown(
                         id='airport-dropdown-control-destiny',
                         options=[
-                            {'label': 'Todos', 'value': 'all'},  # Opción para seleccionar todos los aeropuertos
-                        ] + [
                             {'label': df[df['DestAirportID'] == airport_id].iloc[0]['AeropuertoDestino'], 'value': airport_id}
                             for airport_id in df['DestAirportID'].unique()
                         ],
-                        value='all',  # Valor predeterminado: "todos"
-                        style={'width': '100%'}
-                    ),
-                ], className="four columns", style={'width': '95%', 'margin':'1%'}
-            ),
-            html.Div([
-                    html.Label('Selecciona una aerolínea:'),
-                    dcc.Dropdown(
-                        id='carrier-dropdown-control',
-                        options=[
-                            {'label': 'Todos', 'value': 'all'},  # Opción para seleccionar todas las aerolíneas
-                        ] + [
-                            {'label': df[df['Carrier'] == carrier].iloc[0]['Aerolinea'], 'value': carrier}
-                            for carrier in df['Carrier'].unique()
-                        ],
-                        value='all',  # Valor predeterminado: "todos"
+                        value=12339,  # Valor predeterminado: "todos"
                         style={'width': '100%'}
                     ),
                 ], className="four columns", style={'width': '95%', 'margin':'1%'}
@@ -142,12 +130,13 @@ def generate_control_card():
                         min=0,
                         max=10,
                         step=0.5,
-                        value=5,
+                        value=2,
                         marks={
                             0: {'label': '0m/s', 'style': {'color': '#8fce00'}},
                             5: {'label': '5m/s', 'style': {'color': '#ffd966'}},
                             10: {'label': '10m/s', 'style': {'color': '#f50'}}
-                        }
+                        },
+                        tooltip={'placement': 'bottom', 'always_visible': True}
                     )
                 ],
                 style=dict(width='95%', display='inline-block', margin='1%')
@@ -161,12 +150,13 @@ def generate_control_card():
                         min=0,
                         max=100,
                         step=1,
-                        value=50,
+                        value=98,
                         marks={
                             0: {'label': '0%', 'style': {'color': '#8fce00'}},
                             50: {'label': '50%', 'style': {'color': '#ffd966'}},
                             100: {'label': '100%', 'style': {'color': '#f50'}}
-                        }
+                        },
+                        tooltip={'placement': 'bottom', 'always_visible': True}
                     )
                 ],
                 style=dict(width='95%', display='inline-block', margin='1%')
@@ -180,12 +170,13 @@ def generate_control_card():
                         min=0,
                         max=50,
                         step=1,
-                        value=25,
+                        value=18,
                         marks={
                             0: {'label': '0°C', 'style': {'color': '#8fce00'}},
                             25: {'label': '25°C', 'style': {'color': '#ffd966'}},
                             50: {'label': '50°C', 'style': {'color': '#f50'}}
-                        }
+                        },
+                        tooltip={'placement': 'bottom', 'always_visible': True}
                     )
                 ],
                 style=dict(width='95%', display='inline-block', margin='1%')
@@ -199,12 +190,13 @@ def generate_control_card():
                         min=-50,
                         max=50,
                         step=1,
-                        value=0,
+                        value=-25,
                         marks={
                             -50: {'label': '-50°C', 'style': {'color': '#8fce00'}},
                             0: {'label': '0°C', 'style': {'color': '#ffd966'}},
                             50: {'label': '50°C', 'style': {'color': '#f50'}}
-                        }
+                        },
+                        tooltip={'placement': 'bottom', 'always_visible': True}
                     )
                 ],
                 style=dict(width='95%', display='inline-block', margin='1%')
@@ -218,12 +210,13 @@ def generate_control_card():
                         min=20,
                         max=40,
                         step=0.1,
-                        value=30,
+                        value=25,
                         marks={
                             20: {'label': '20hPa', 'style': {'color': '#8fce00'}},
                             30: {'label': '30hPa', 'style': {'color': '#ffd966'}},
                             40: {'label': '40hPa', 'style': {'color': '#f50'}}
-                        }
+                        },
+                        tooltip={'placement': 'bottom', 'always_visible': True}
                     )
                 ],
                 style=dict(width='95%', display='inline-block', margin='1%')
@@ -237,27 +230,48 @@ def generate_control_card():
                         min=20,
                         max=40,
                         step=0.1,
-                        value=30,
+                        value=25,
                         marks={
                             20: {'label': '20inHg', 'style': {'color': '#8fce00'}},
                             30: {'label': '30inHg', 'style': {'color': '#ffd966'}},
                             40: {'label': '40inHg', 'style': {'color': '#f50'}}
-                        }
+                        },
+                        tooltip={'placement': 'bottom', 'always_visible': True}
                     )
                 ],
                 style=dict(width='95%', display='inline-block', margin='1%')
             ),
-            html.Br(),
-            html.Br(),
+            html.Div(
+                id="componente-slider7",
+                children=[
+                    html.P("Visibilidad (Km):", style=dict(width='100%', textAlign='left', margin='1%')),
+                    dcc.Slider(
+                        id='slider-visibilidad',
+                        min=0,
+                        max=10,
+                        step=0.5,
+                        value=2,
+                        marks={
+                            0: {'label': '0 km', 'style': {'color': '#8fce00'}},
+                            5: {'label': '5 km', 'style': {'color': '#ffd966'}},
+                            10: {'label': '10 km', 'style': {'color': '#f50'}}
+                        },
+                        tooltip={'placement': 'bottom', 'always_visible': True}
+                    )
+                ],
+                style=dict(width='95%', display='inline-block', margin='1%')
+            ),
+            html.Div([
+                html.P("Valores predictores:", style={"width":'100%', "text-align":'left', "margin":'1%', "font-weight": "bold"}),
+                html.P(id='slider-values-output', style=dict(width='100%', textAlign='left', margin='1%'))
+            ], style=dict(width='95%', display='inline-block', margin='1%')
+            ),
             html.Br(),
             html.Div([
                 html.Div([
-                    html.Button('Predecir Retraso', id='my-button', className='my-button-class', n_clicks=0, style=dict(width='100%', height='5%', display='inline-block', marginBottom='5%', marginTop='3%')),
-                ], className="four columns", style={'width': '48%'}),
-                html.Div([
-                    dcc.Markdown(children='Probabilidad Retraso: 85%', id='prediction-output', className='my-predresult-class', style={"width":'50%', "height":'10%', "display":'inline-block', "margin-left":'10%', "margin-top":'0%', "margin-bottom":'5%', 'textAlign':'center'})
-                ], className="four columns", style={'width': '48%'}),
-            ], className="row"),
+                    dcc.Markdown(children='ALTA Probabilidad de Retraso', id='prediction-output', className='my-predresult-class', style={"width":'70%', "height":'15%', "display":'inline-block', "margin-left":'10%', "margin-top":'0%', "margin-bottom":'5%', 'textAlign':'center'})
+                ], className="", style={'width': '100%'})
+            ], className="row"), 
         ]
     )
 
@@ -474,13 +488,101 @@ def actualizar_graficos_y_contadores(airport_id, carrier):
     return fig_bar, fig_pie, fig_line, fig, f"Número de aeropuertos: {aeropuertos_count}", f"Número de aerolíneas: {aerolineas_count}", f"Número de vuelos: {vuelos_count}", f"Vuelos retrasados: {vuelos_retrasados}"
 
 
+@app.callback(
+    [Output('slider-values-output', 'children'),
+     Output('prediction-output', 'children')],
+    [Input('slider-viento', 'value'),
+     Input('slider-humedad', 'value'),
+     Input('slider-temperaturabulbo', 'value'),
+     Input('slider-temperaturarocio', 'value'),
+     Input('slider-stationpressure', 'value'),
+     Input('slider-altimeter', 'value'),
+     Input('slider-visibilidad', 'value'),
+     Input('airport-dropdown-control-origin', 'value'), 
+     Input('airport-dropdown-control-destiny', 'value'),
+     Input('datepicker-inicial', 'date')]
+)
+def actualizar_slider_values(valor_viento, valor_humedad, valor_temperaturabulbohumedo,
+                             valor_temperaturarocio, valor_stationpressure,
+                             valor_altimeter, valor_visibilidad, aeropuerto_origen, aeropuerto_destino, fecha):
+    
+    cont = random.choice([0, 1])
 
+    date_format = "%Y-%m-%d"
+
+    # Convert the string to a datetime object
+    fecha = datetime.strptime(fecha, date_format)
+
+    if cont != 0:
+        # Generate a random boolean value
+        aa = random.choice([True, False])
+        # Generate a random boolean value
+        sp = random.choice([True, False])
+        # Generate a random boolean value
+        symt = random.choice([True, False])
+        # Generate a random float between -20 and 50 for temperature dry bulb
+        valor_temperaturabulboseco = round(random.uniform(-20, 50),1)
+        # Generate a random float between -20 and 50 for wind direction
+        valor_direccionviento = round(random.uniform(0, 360),0)
+    else:
+        aa = False
+        sp = False
+        symt = True
+        valor_temperaturabulboseco = 36.2
+        valor_direccionviento = 241
+
+    if aeropuerto_origen == 'all':
+        aeropuerto_origen = int(random.uniform(10000, 15000))
+
+    if aeropuerto_destino == 'all':
+        aeropuerto_destino = int(random.uniform(10000, 15000))
+
+    # Crear un JSON con los parametros de la predicción.
+    myreq = {
+        "inputs": [
+            {
+                "Month": fecha.month,
+                "DayOfWeek": fecha.weekday()+1,
+                "DestAirportID": aeropuerto_destino,
+                "AirportID": aeropuerto_origen,
+                "Day": fecha.day,
+                "Visibility": valor_visibilidad,
+                "DryBulbCelsius": valor_temperaturabulboseco,
+                "WetBulbCelsius": valor_temperaturabulbohumedo,
+                "DewPointCelsius": valor_temperaturarocio,
+                "RelativeHumidity": valor_humedad,
+                "WindSpeed": valor_viento,
+                "WindDirection": valor_direccionviento,
+                "StationPressure": valor_stationpressure,
+                "Altimeter": valor_altimeter,
+                "AA": aa,
+                "SP": sp,
+                "SYMT": symt
+            }
+        ]
+      }
+    
+    predictores = f"Velocidad Viento: {valor_viento}, Humedad: {valor_humedad}, Direccion Viento: {valor_direccionviento}, " \
+                f"Temperatura Bulbo Húmedo: {valor_temperaturabulbohumedo}, Temperatura Rocío: {valor_temperaturarocio}, Temperatura Bulbo Seco: {valor_temperaturabulboseco}, " \
+                f"Presión Estacionaria: {valor_stationpressure}, Altimetro: {valor_altimeter}, " \
+                f"Visibilidad: {valor_visibilidad}, ID Aeropuerto Origen: {aeropuerto_origen}, ID Aeropuerto Destino: {aeropuerto_destino}, " \
+                f"Día de la semana: {fecha.weekday()+1}, Día del mes: {fecha.day}, Mes: {fecha.month}, AA: {aa}, SP: {sp}, SYMT: {symt}." 
+                
+    #print(valores_sliders)
+    #print(len(valores_sliders))
+    headers =  {"Content-Type":"application/json", "accept": "application/json"}
+
+    # POST call to the API
+    response = requests.post(api_url, data=json.dumps(myreq), headers=headers)
+    data = response.json()
+    logger.info("Response: {}".format(data))
+
+    # Pick model_output to return from json format
+    prediccion = "ALTO riesgo de retraso" if round(data["predictions"][0])==1 else "BAJO riesgo de retraso"
+
+    return predictores, prediccion
 
 # Ejecuta la aplicación
 if __name__ == '__main__':
+    logger.info("Running dash")
     app.run_server(host="0.0.0.0", debug=True)
-
-
-# Poner controles de entrada para predicción.
-# Poner sección de referenciación de datos.
-# Cambiar colores del tema? 
