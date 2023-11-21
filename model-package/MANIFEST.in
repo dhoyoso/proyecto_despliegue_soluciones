@@ -3,8 +3,7 @@ include *.md
 include *.pkl
 recursive-include ./model/*
 
-include model/datasets/bankchurn_train.csv
-include model/datasets/bankchurn_test.csv
+include model/datasets/*.csv
 include model/trained_models/*.pkl
 include model/VERSION
 include model/config.yml

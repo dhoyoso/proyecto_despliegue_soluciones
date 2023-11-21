@@ -6,11 +6,11 @@ from pathlib import Path
 from setuptools import find_packages, setup
 
 # Metadatos del paquete
-NAME = 'model-abandono'
-DESCRIPTION = "Ejemplo de empaquetamiento de modelo de bank churn."
+NAME = 'model-flights-delays'
+DESCRIPTION = "Ejemplo de empaquetamiento de modelo para predecir retrasos en vuelos."
 URL = ""
-EMAIL = "jf.perez33@uniandes.edu.co"
-AUTHOR = "juanfperez"
+EMAIL = "d.hoyoso@uniandes.edu.co"
+AUTHOR = "d.hoyoso"
 REQUIRES_PYTHON = ">=3.10.0"
 long_description = DESCRIPTION
 

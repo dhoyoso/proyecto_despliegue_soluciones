@@ -1,5 +1,5 @@
 # Nombre del paquete
-package_name: modelo-abandono
+package_name: model-flights-delays
 
 # Archivos de datos
 train_data_file: bankchurn_train.csv
