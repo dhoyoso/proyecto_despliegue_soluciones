@@ -15,9 +15,13 @@ El desafío principal que se aborda en este proyecto está relacionado con la in
 -	Integración de los conjuntos de datos.
 -	Exploración de los conjuntos de datos.
 -	Selección y entrenamiento de modelos para la predicción de retrasos.
+- Registro de modelos y experimentos en mlflow.
 -	Creación de tablero de visualización de datos históricos.
+- Creación del paquete con el modelo entrenado.
+- Creación del API que albergará el modelo entrenado para predecir.
 -	Integración del tablero con una interfaz de captura de datos para realizar predicciones de retrasos.
--	Despliegue y operación de la solución (incluye tablero e interfaz de interacción con el modelo predictivo). 
+- Integración del tablero con el API.
+-	Despliegue y operación de la solución (incluye tablero y API).
 -	Todo lo anterior, realizado bajo las mejores prácticas de MLOPS para el versionamiento de modelos, código, experimentos y su reproducibilidad.
 -	El objetivo final del proyecto es proporcionar información útil para la toma de decisiones operativas y estratégicas en aerolíneas y aeropuertos.
 
@@ -135,6 +139,7 @@ La información se descarga directamente de la página del Buró https://www.bts
  ┃ ┣ 📄 manual de instalación tablero.docx --> Manual de instalación del tablero en word.
  ┗ ┗ 📄 manual de instalación tablero.pdf --> Manual de instalación del tablero en pdf.
  ```
+
 # MLFlow
 Con el mejor modelo validado en instancias locales, se procedio realizar en una maquina virtual la corrida con diferentes hiperparametros para encontrar el modelo con el mejor desempeño de posible e implementarlo en el tablero final.
 
