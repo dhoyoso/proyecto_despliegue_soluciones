@@ -15,6 +15,7 @@ import json
 df = pd.read_csv('./assets/resultado_merge.csv')
 
 app = dash.Dash(__name__)
+server = app.server
 
 # PREDICTION API URL 
 api_url = os.getenv('API_URL')
