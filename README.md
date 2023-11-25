@@ -134,10 +134,10 @@ La información se descarga directamente de la página del Buró https://www.bts
  ┃ ┃ ┣ 📄 setup.py --> Script de configuración del paquete.
  ┃ ┗ ┗ 📄 tox.ini --> Archivo de configuración de tox para el paquete.
  ┣ 📂 manuales --> Carpeta con los manuales de usuario e instalación del tablero.
- ┃ ┣ 📄 manual de usuario tablero.docx --> Manual de usuario del tablero en word.
- ┃ ┣ 📄 manual de usuario tablero.pdf --> Manual de usuario del tablero en pdf.
- ┃ ┣ 📄 manual de instalación tablero.docx --> Manual de instalación del tablero en word.
- ┗ ┗ 📄 manual de instalación tablero.pdf --> Manual de instalación del tablero en pdf.
+ ┃ ┣ 📄 Manual Tablero.docx --> Manual de usuario del tablero en word.
+ ┃ ┣ 📄 Manual Tablero.pdf --> Manual de usuario del tablero en pdf.
+ ┃ ┣ 📄 Manual Despliegue API y Tablero Flight_Delay.docx --> Manual de instalación del tablero y api en word.
+ ┗ ┗ 📄 Manual Despliegue API y Tablero Flight_Delay.pdf --> Manual de instalación del tablero y api en pdf.
  ```
 
 # MLFlow
